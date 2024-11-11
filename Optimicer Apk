@@ -1,0 +1,54 @@
+```
+bash
+#!/bin/bash
+
+# Detectar arquitectura del procesador
+arquitectura=$(uname -m)
+
+# Verificar versión de Android
+version_android=$(getprop ro.build.version.sdk)
+
+# Gestión de memoria
+sync; echo 3 > /proc/sys/vm/drop_caches
+
+# Optimización de gráficos
+echo "balance" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+
+# Compatibilidad con dispositivos de 32 bits
+if [ $arquitectura == "i686" ]; then
+  setarch linux32
+fi
+
+# Compatibilidad con dispositivos de 64 bits
+if [ $arquitectura == "x86_64" ]; then
+  setarch linux64
+fi
+
+# Verificar permisos
+if [ $(id -u) != 0 ]; then
+  echo "Error: No tienes permisos suficientes para ejecutar este script."
+  exit 1
+fi
+
+# Menú principal
+while true; do
+  clear
+  echo "Optimicer APK v1.0"
+  echo "-------------------"
+  echo "1. Liberar memoria RAM"
+  echo "2. Ajustar frecuencia del procesador"
+  echo "3. Reducir consumo de energía"
+  echo "4. Ajustar calidad de los gráficos"
+  echo "5. Salir"
+  read -p "Seleccione una opción: " opcion
+
+  case $opcion in
+    1) sync; echo 3 > /proc/sys/vm/drop_caches ;;
+    2) echo "performance" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ;;
+    3) echo "low" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq ;;
+    4) echo "balance" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ;;
+    5) exit ;;
+    *) echo "Opción inválida" ;;
+  esac
+done
+```
